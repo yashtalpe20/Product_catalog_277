@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ProdCat — Gradient Product Catalog</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      background: linear-gradient(120deg, #f8fafc 0%, #e6f0ff 60%, #fff1f0 100%);
+      min-height: 100vh;
+      color: #283747;
+    }
+    header {
+      padding: 2.2rem 1rem 1.1rem 1rem;
+      background: linear-gradient(90deg, #7ed6df 0%, #e056fd 100%);
+      color: #fff;
+      text-align: center;
+      border-radius: 0 0 2.5rem 2.5rem;
+      box-shadow: 0 2px 18px 0 #a29bfe33;
+    }
+    header h1 {
+      font-size: 2.3rem;
+      margin: 0;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+    .search-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.2rem auto 1.1rem auto;
+      max-width: 1080px;
+      flex-wrap: wrap;
+      background: #fff;
+      padding: 0.7rem 1.2rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 22px 0 #636e7238;
+    }
+    .categories, .sorts {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .chip {
+      background: linear-gradient(87deg, #dff9fb 20%, #fffbe6 80%);
+      box-shadow: 0 1px 12px -1px #7ed6df44;
+      color: #535c68;
+      border: none;
+      font-size: 1.00rem;
+      font-weight: 600;
+      border-radius: 1.3em;
+      padding: 0.4em 1.3em;
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: background 0.18s, color 0.18s;
+    }
+    .chip.active, .chip:hover {
+      background: linear-gradient(90deg,#e056fd 0%,#7ed6df 100%);
+      color: #fff;
+    }
+    .search-bar {
+      flex: 1 1 85px;
+      border-radius: 13px;
+      border: 1.5px solid #c7ecee;
+      font-size: 1rem;
+      padding: 7px 18px;
+      background: #fcfcfc;
+      box-shadow: 0 0 10px -6px #636e7260;
+    }
+    .sorts select {
+      border-radius: 12px;
+      padding: 0.3em 1.2em;
+      font-size: 1.01rem;
+      border: 1.2px solid #bad7df;
+      background: linear-gradient(90deg,#fffbe6 0%,#dff9fb 100%);
+      color: #535c68;
+      font-weight: 500;
+      margin-right: 0.6rem;
+      transition: background 0.16s;
+    }
+    .sorts select:focus {
+      background: #e056fd14;
+      outline: none;
+    }
+    .clear-btn {
+      background: #ffbe76;
+      color: #474646;
+      border: none;
+      outline: none;
+      padding: 0.42em 0.9em;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-right: 0.6rem;
+      font-size: 0.98rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .clear-btn:hover {
+      background: #ff7979;
+      color: #fff;
+    }
+    .slider-row {
+      max-width: 1080px;
+      margin: 1.2rem auto 0.2rem auto;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px 0 #636e7238;
+      padding: 0.9rem 1.3rem 0.5rem 1.3rem;
+      font-size: 1rem;
+    }
+    .slider-row label {
+      font-weight: 600;
+      margin-right: 7px;
+    }
+    .price-slider {
+      flex: 1;
+      margin: 0 10px;
+      accent-color: #e056fd;
+    }
+    .price-label {
+      font-weight: 600;
+      color: #4834d4;
+    }
+    .catalog-row {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit,minmax(305px,1fr));
+      max-width: 1080px;
+      margin: 2.1rem auto;
+    }
+    .card {
+      background: linear-gradient(110deg,#f5fafd 55%,#fdf6fd 100%);
+      border-radius: 20px;
+      box-shadow: 0 4px 36px -8px #4834d448, 0 1px 10px -3px #b2bec323;
+      padding: 0 0 18px 0;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.17s, transform 0.16s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .card:hover {
+      box-shadow: 0 8px 40px -5px #45aaf2a0, 0 2px 14px -4px #f9ca24cc;
+      transform: translateY(-3px) scale(1.012);
+    }
+    .card img {
+      width: 100%;
+      height: 215px;
+      object-fit: cover;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 2px 14px -4px #a5b1c2;
+    }
+    .product-category {
+      display: inline-block;
+      font-size: 0.945em;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(90deg,#63cdda 0%,#786fa6 100%);
+      padding: 4px 19px;
+      border-radius: 12px;
+      position: absolute;
+      top: 15px;
+      left: 17px;
+      letter-spacing: 0.05em;
+      box-shadow: 0 2px 8px -3px #45aaf2a1;
+    }
+    .product-category[data-cat="Books"]   { background: linear-gradient(90deg,#ffeab5 20%,#e17055 80%); color:#353535;}
+    .product-category[data-cat="Footwear"]{ background: linear-gradient(90deg,#7ed6df 20%,#54a0ff 80%);}
+    .product-category[data-cat="Gaming"]  { background: linear-gradient(90deg,#b33939 20%,#f6e58d 80%);}
+    .product-category[data-cat="Clothing"]{ background: linear-gradient(90deg,#fd79a8 20%,#a29bfe 80%);}
+    .product-category[data-cat="Home & Kitchen"]{ background: linear-gradient(90deg,#00b894 20%,#e17055 80%);}
+    .product-category[data-cat="Electronics"]{ background: linear-gradient(90deg,#d6aefc 20%,#00b894 80%);}
+    .card-details {
+      padding: 1.2rem 1.2rem 0 1.2rem;
+      flex: 1;
+    }
+    .product-title {
+      margin: 0 0 0.0rem 0;
+      font-size: 1.19em;
+      font-weight: 700;
+      color: #3d3d3d;
+      letter-spacing: 0.02em;
+    }
+    .product-price {
+      font-size: 1.07em;
+      color: #4834d4;
+      font-weight: 700;
+      margin: 0.4em 0 0.18em 0;
+      letter-spacing: 0.01em;
+    }
+    .product-desc {
+      color: #636e72;
+      font-size: 0.97em;
+      margin-bottom: 0.3rem;
+    }
+    .card-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 0.7rem;
+    }
+    .action-btn {
+      background: linear-gradient(90deg,#7ed6df 0%,#e056fd 100%);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      padding: 0.4em 1.1em;
+      font-size: 1.14em;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.14s, color 0.14s;
+      box-shadow: 0 1px 10px -5px #4834d4;
+      margin-bottom: 2px;
+    }
+    .action-btn.delete { background: linear-gradient(90deg,#ff7979 0%,#badc58 100%);}
+    .action-btn:hover { opacity: 0.8; }
+    .fab {
+      position: fixed;
+      bottom: 30px;
+      right: 36px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg,#786fa6 10%,#f6e58d 95%);
+      color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 3px 18px -3px #22a6b32e;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      transition: background 0.15s;
+    }
+    .fab:hover { background: linear-gradient(135deg,#f6e58d 5%,#786fa6 95%);}
+    @media (max-width: 860px) {.search-row,.slider-row,.catalog-row{max-width:99vw;padding-left:2vw;padding-right:2vw;}.catalog-row{gap:0.8rem;}}
+    @media (max-width:650px) {header{padding:1.4rem;}.search-row,.slider-row{padding:0.6rem 0.2rem;}.card img{height:180px;}.fab{right:14px;bottom:15px;}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fa-solid fa-layer-group"></i> ProdCat Gradient</h1>
+    <div style="margin-top:0.5em;font-size:1.05em;font-weight:500;">Explore trending products with revamped style!</div>
+  </header>
+  <div class="search-row">
+    <div class="categories" id="categories">
+      <button class="chip active" data-cat="All">All</button>
+      <button class="chip" data-cat="Electronics">Electronics</button>
+      <button class="chip" data-cat="Footwear">Footwear</button>
+      <button class="chip" data-cat="Books">Books</button>
+      <button class="chip" data-cat="Home & Kitchen">Home & Kitchen</button>
+      <button class="chip" data-cat="Gaming">Gaming</button>
+      <button class="chip" data-cat="Clothing">Clothing</button>
+    </div>
+    <input type="text" class="search-bar" id="searchBar" placeholder="Search products...">
+    <div class="sorts">
+      <select id="sortSelect">
+        <option value="priceLowHigh">Price Low-High</option>
+        <option value="priceHighLow">Price High-Low</option>
+        <option value="titleAZ">Title A-Z</option>
+        <option value="titleZA">Title Z-A</option>
+      </select>
+      <button class="clear-btn" id="clearFilters">Clear all filters</button>
+    </div>
+  </div>
+  <div class="slider-row">
+    <label>Price:</label>
+    <span class="price-label" id="minPriceLabel">₹0</span>
+    <input type="range" min="0" max="200000" step="1" value="0" class="price-slider" id="priceSlider">
+    <span class="price-label" id="maxPriceLabel">₹2,00,000</span>
+  </div>
+  <div class="catalog-row" id="catalogRow">
+    <!-- Product cards get injected here by JS -->
+  </div>
+  <div class="fab" id="fabBtn" title="Add new product"><i class="fa-solid fa-plus"></i></div>
+  <script>
+    // Sample product data (use your logic to load and persist)
+    let products = [
+      {
+        id: "1",
+        category: "Books",
+        title: "The Alchemist Book",
+        price: 350,
+        desc: "Paulo Coelho's bestselling philosophical novel",
+        image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&q=80",
+      },
+      {
+        id: "2",
+        category: "Books",
+        title: "Harry Potter Complete Set",
+        price: 2899,
+        desc: "Complete collection of all 7 Harry Potter books",
+        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&q=80",
+      },
+      {
+        id: "3",
+        category: "Clothing",
+        title: "Levi's 501 Jeans",
+        price: 4999,
+        desc: "Classic straight-fit jeans in premium denim",
+        image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&q=80",
+      },
+      {
+        id: "4",
+        category: "Home & Kitchen",
+        title: "Instant Pot Duo 7-in-1",
+        price: 8999,
+        desc: "Multi-functional pressure cooker for every kitchen",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&q=80",
+      },
+      {
+        id: "5",
+        category: "Footwear",
+        title: "Nike Air Max Red",
+        price: 6499,
+        desc: "Popular sports shoes with air cushioning",
+        image: "https://images.unsplash.com/photo-1519864600265-abb266a1b6b7?auto=format&q=80",
+      },
+      {
+        id: "6",
+        category: "Electronics",
+        title: "Sony WH-1000XM4",
+        price: 24999,
+        desc: "Noise-cancelling wireless headphones",
+        image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&q=80",
+      },
+      {
+        id: "7",
+        category: "Gaming",
+        title: "PlayStation 5 Console",
+        price: 49990,
+        desc: "The latest next-gen gaming experience",
+        image: "https://images.unsplash.com/photo-1606813909986-7ddc79d30239?auto=format&q=80",
+      }
+    ];
+    // ---- UI Logic ---- //
+    let activeCategory = "All";
+    let searchQuery = "";
+    let priceFilter = 0;
+    let sortOption = "priceLowHigh";
+    function renderCatalog() {
+      let filtered = products.filter(p => 
+          (activeCategory==="All"||p.category===activeCategory) &&
+          p.price>=priceFilter &&
+          (p.title.toLowerCase().includes(searchQuery)||p.desc.toLowerCase().includes(searchQuery))
+      );
+      // Sorting
+      if (sortOption === "priceLowHigh")
+        filtered.sort((a,b)=>a.price-b.price);
+      else if (sortOption === "priceHighLow")
+        filtered.sort((a,b)=>b.price-a.price);
+      else if (sortOption === "titleAZ")
+        filtered.sort((a,b)=>a.title.localeCompare(b.title));
+      else if (sortOption === "titleZA")
+        filtered.sort((a,b)=>b.title.localeCompare(a.title));
+      // Render
+      const row=document.getElementById('catalogRow');
+      row.innerHTML = filtered.map(product => `
+        <div class="card">
+          <span class="product-category" data-cat="${product.category}">${product.category}</span>
+          <img src="${product.image}" alt="${product.title}">
+          <div class="card-details">
+            <div class="product-title">${product.title}</div>
+            <div class="product-price">₹${product.price.toLocaleString('en-IN')}</div>
+            <div class="product-desc">${product.desc}</div>
+            <div class="card-actions">
+              <button class="action-btn edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn delete" title="Delete"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      if (filtered.length === 0)
+        row.innerHTML = '<div style="margin:2em;color:#b2bec3;text-align:center;font-size:1.2em;">No products match the selected filters.</div>';
+    }
+    // Filter events
+    document.querySelectorAll('.chip').forEach(b => b.onclick = function() {
+      document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeCategory = b.getAttribute('data-cat');
+      renderCatalog();
+    });
+    document.getElementById('searchBar').oninput = function(e) {
+      searchQuery = e.target.value.toLowerCase();
+      renderCatalog();
+    };
+    document.getElementById('sortSelect').onchange = function(e) {
+      sortOption = e.target.value;
+      renderCatalog();
+    };
+    document.getElementById('clearFilters').onclick = function() {
+      activeCategory = "All";
+      searchQuery = "";
+      priceFilter = 0;
+      sortOption = "priceLowHigh";
+      document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      document.querySelector('.chip[data-cat="All"]').classList.add('active');
+      document.getElementById('searchBar').value = "";
+      document.getElementById('sortSelect').value = "priceLowHigh";
+      document.getElementById('priceSlider').value = "0";
+      renderCatalog();
+    };
+    document.getElementById('priceSlider').oninput = function(e) {
+      priceFilter = Number(e.target.value);
+      renderCatalog();
+    };
+    // Floating button event (add)
+    document.getElementById('fabBtn').onclick = function() {
+      alert("Add new product — Implement form logic as required!");
+    };
+    // Initial run
+    renderCatalog();
+  </script>
+</body>
+</html>
